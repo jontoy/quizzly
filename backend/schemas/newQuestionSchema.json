@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+    {
+      "quiz_id": "123e4567-e89b-12d3-a456-426614174000",
+      "text": "How many eggs are in a baker's dozen?",
+      "order_priority": 6.2
+    }
+  ],
+  "required": ["quiz_id", "text", "order_priority"],
+  "properties": {
+    "quiz_id": {
+      "$id": "#/properties/quiz_id",
+      "type": "string",
+      "title": "The quiz_id schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": "",
+      "examples": ["123e4567-e89b-12d3-a456-426614174000"]
+    },
+    "text": {
+      "$id": "#/properties/text",
+      "type": "string",
+      "title": "The text schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": "",
+      "examples": ["How many eggs are in a baker's dozen?"]
+    },
+    "order_priority": {
+      "$id": "#/properties/order_priority",
+      "type": "number",
+      "title": "The order_priority schema",
+      "description": "An explanation about the purpose of this instance.",
+      "default": 0.0,
+      "examples": [6.2]
+    }
+  },
+  "additionalProperties": true
+}
