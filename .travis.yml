@@ -6,5 +6,6 @@ services:
 
 before_script:
   - cd backend
+  - npm install
   - createdb quizzly-test
   - psql quizzly-test < db.sql
