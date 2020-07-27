@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - 11
+services:
+  - postgresql
+
+before_script:
+  - cd backend
+  - createdb quizzly-test
+  - psql quizzly-test < db.sql
