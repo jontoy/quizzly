@@ -8,4 +8,4 @@ before_script:
   - cd backend
   - npm install
   - createdb quizzly-test
-  - psql quizzly-test < db.sql
+  - psql quizzly-test < data.sql
