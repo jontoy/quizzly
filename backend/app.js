@@ -13,7 +13,10 @@ const questionRoutes = require("./routes/questions");
 const optionRoutes = require("./routes/options");
 
 app.use(express.json());
-
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
 app.use(morgan("tiny"));
 
 app.use("/quiz", quizRoutes);

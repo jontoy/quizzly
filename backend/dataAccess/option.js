@@ -34,7 +34,6 @@ class Option {
     const finalQuery =
       baseQuery + whereExpressions.join(" AND ") + " ORDER BY value";
     const results = await db.query(finalQuery, queryValues);
-    console.log(finalQuery);
     return results.rows;
   }
 
