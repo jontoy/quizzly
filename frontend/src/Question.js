@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useParams, Redirect } from "react-router-dom";
-import QuizzlyApi from "./QuizzlyApi";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getQuizFromAPI } from "./actions/quizzes";
 import { getQuestionFromAPI } from "./actions/questions";
 import { addResponse } from "./actions/responses";
+import "./Question.css";
 
 const Question = () => {
   const dispatch = useDispatch();
@@ -43,15 +43,20 @@ const Question = () => {
     history.push(destinationRoute);
   };
 
-  const BASE_STATE = { choice: "" };
+  const BASE_STATE = { choice: null };
   const [formData, setFormData] = useState(BASE_STATE);
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const captureFormData = ({ name, value }) => {
     setFormData((data) => ({
       ...data,
       errors: [],
       [name]: value,
     }));
+  };
+  const handleChange = (e) => captureFormData(e.target);
+
+  const handleClick = (e) => {
+    const input = e.target.querySelector("input");
+    if (input) captureFormData(input);
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -63,6 +68,7 @@ const Question = () => {
         userChoice ? userChoice.is_correct : false
       )
     );
+    setFormData((data) => BASE_STATE);
     goToActiveQuestion(quiz, responses);
   };
 
@@ -70,24 +76,41 @@ const Question = () => {
     return <p>Loading &hellip;</p>;
   }
   return (
-    <div className="Question">
-      <h2>
+    <div className="Question container">
+      <span className="Question-counter">
         Question {Number(questionNumber) + 1} of {quiz.questions.length}
-      </h2>
+      </span>
       <h4>{question.text}</h4>
-      <p>The selected option is: {formData.choice}</p>
       <form onSubmit={handleSubmit}>
-        {question.options.map((opt, idx) => (
-          <label key={opt.option_id}>
-            <input
-              type="radio"
-              value={idx}
-              name="choice"
-              onChange={handleChange}
-            />
-            {opt.value}
-          </label>
-        ))}
+        <ul className="list-unstyled">
+          {question.options.map((opt, idx) => (
+            <li className="Question-option my-1">
+              <div className="card bg-light border-dark">
+                <div className="card-body">
+                  <div className="form-check px-5" onClick={handleClick}>
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      value={idx}
+                      name="choice"
+                      id={`option${idx}`}
+                      checked={String(formData["choice"]) === String(idx)}
+                      onChange={handleChange}
+                    />
+                    <label
+                      htmlFor={`option${idx}`}
+                      className="form-check-label"
+                      key={opt.option_id}
+                    >
+                      {opt.value}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
         <button>Submit</button>
       </form>
     </div>

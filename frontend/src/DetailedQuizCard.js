@@ -23,7 +23,7 @@ const DetailedQuizCard = ({
       {numQuestions > 0 && (
         <>
           <button onClick={activate}>{buttonPrompt}</button>
-          <button onClick={reset}>Reset Progress?</button>
+          {numResponses > 0 && <button onClick={reset}>Reset Progress?</button>}
         </>
       )}
     </div>
