@@ -9,6 +9,14 @@ import QuizzlyApi from "../QuizzlyApi";
 function getQuestionFromAPI(question_id) {
   return async function (dispatch) {
     const question = await QuizzlyApi.getQuestion(question_id);
+    // remove truth/falsity of options from redux store
+    question.options = question.options.map(
+      ({ option_id, question_id, value, is_correct }) => ({
+        option_id,
+        question_id,
+        value,
+      })
+    );
     dispatch(gotQuestion(question));
   };
 }

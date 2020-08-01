@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -7,6 +7,7 @@ import { resetResponses } from "./actions/responses";
 import ResultsBanner from "./ResultsBanner";
 import ResultsList from "./ResultsList";
 import { Link } from "react-router-dom";
+import QuizzlyApi from "./QuizzlyApi";
 
 const QuizResult = () => {
   const dispatch = useDispatch();
@@ -14,37 +15,51 @@ const QuizResult = () => {
   const { quizId } = useParams();
   const quiz = useSelector((store) => store.quizzes[quizId]);
   const responses = useSelector((store) => store.responses);
-  const missing = !quiz;
+  const missingQuiz = !quiz;
+  const [answers, setAnswers] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(
     function () {
-      if (missing) {
+      if (missingQuiz) {
         dispatch(getQuizFromAPI(quizId));
       }
     },
-    [quizId, missing, dispatch]
+    [quizId, missingQuiz, dispatch]
   );
-  if (missing) {
+
+  useEffect(() => {
+    async function getQuizAnswers() {
+      let targetQuizAnswers = await QuizzlyApi.getQuizAnswers(quizId);
+
+      setAnswers(targetQuizAnswers.answers);
+      setIsLoading(false);
+    }
+    getQuizAnswers();
+  }, [quizId]);
+
+  if (missingQuiz || isLoading) {
     return <p>Loading &hellip;</p>;
   }
   const quizResponses = responses[quiz.id];
 
-  const results = quiz.questions.map(({ question_id, text }, idx) => ({
+  const results = answers.map(({ question_id, text, valid_options }, idx) => ({
     id: question_id,
     text,
-    isCorrect: quizResponses[idx],
+    isCorrect: valid_options.includes(quizResponses[idx]),
   }));
+
   const countCorrect = (arr) => {
     let count = 0;
     for (let item of arr) {
-      if (item) {
+      if (item.isCorrect) {
         count += 1;
       }
     }
     return count;
   };
-  const numberCorrect = countCorrect(quizResponses);
-  const totalQuestions = quiz.questions.length;
+  const numberCorrect = countCorrect(results);
+  const totalQuestions = results.length;
   const reset = () => {
     dispatch(resetResponses(quiz.id));
     history.push(`/quizzes/${quiz.id}`);

@@ -108,6 +108,31 @@ class Quiz {
     }
     return true;
   }
+
+  static async getAnswers(id) {
+    const result = await db.query(
+      `SELECT qz.id, qz.name, qz.difficulty, 
+        qstn.question_id, qstn.text, qstn.order_priority, 
+        JSON_AGG(o.option_id) AS "valid_options"
+        FROM quizzes qz
+        JOIN questions qstn ON qz.id = qstn.quiz_id
+        JOIN options o ON qstn.question_id = o.question_id
+        WHERE qz.id = $1 AND o.is_correct = $2
+        GROUP BY (qz.id, qstn.question_id)
+        ORDER BY qstn.order_priority`,
+      [id, true]
+    );
+
+    const quizAnswers = { quiz_id: result.rows[0].id };
+    quizAnswers.answers = result.rows.map(
+      ({ question_id, text, valid_options }) => ({
+        question_id,
+        text,
+        valid_options,
+      })
+    );
+    return quizAnswers;
+  }
 }
 
 module.exports = Quiz;

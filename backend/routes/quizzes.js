@@ -69,6 +69,16 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.get("/:id/answers", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const answers = await Quiz.getAnswers(id);
+    return res.json({ answers });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** PATCH /[id]
  *
  * Updates a quiz.

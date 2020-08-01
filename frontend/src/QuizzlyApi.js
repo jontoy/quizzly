@@ -38,6 +38,10 @@ class QuizzlyApi {
     let res = await this.request(`quiz/${id}`);
     return res.quiz;
   }
+  static async getQuizAnswers(id) {
+    let res = await this.request(`quiz/${id}/answers`);
+    return res.answers;
+  }
   static async getQuestions({ text, quiz_id }) {
     let res = await this.request(`question`, {
       text,

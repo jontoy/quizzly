@@ -60,14 +60,7 @@ const Question = () => {
   };
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    const userChoice = question.options[formData.choice];
-    dispatch(
-      addResponse(
-        quizId,
-        questionNumber,
-        userChoice ? userChoice.is_correct : false
-      )
-    );
+    dispatch(addResponse(quizId, questionNumber, formData.choice));
     setFormData((data) => BASE_STATE);
     goToActiveQuestion(quiz, responses);
   };
@@ -83,7 +76,7 @@ const Question = () => {
       <h4>{question.text}</h4>
       <form onSubmit={handleSubmit}>
         <ul className="list-unstyled">
-          {question.options.map((opt, idx) => (
+          {question.options.map((opt) => (
             <li className="Question-option my-1">
               <div className="card bg-light border-dark">
                 <div className="card-body">
@@ -91,14 +84,14 @@ const Question = () => {
                     <input
                       className="form-check-input"
                       type="radio"
-                      value={idx}
+                      value={opt.option_id}
                       name="choice"
-                      id={`option${idx}`}
-                      checked={String(formData["choice"]) === String(idx)}
+                      id={opt.option_id}
+                      checked={formData["choice"] === opt.option_id}
                       onChange={handleChange}
                     />
                     <label
-                      htmlFor={`option${idx}`}
+                      htmlFor={opt.option_id}
                       className="form-check-label"
                       key={opt.option_id}
                     >
