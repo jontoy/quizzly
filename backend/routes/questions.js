@@ -1,10 +1,9 @@
 const express = require("express");
-const jsonschema = require("jsonschema");
 const newQuestionSchema = require("../schemas/newQuestionSchema.json");
 const updateQuestionSchema = require("../schemas/updateQuestionSchema.json");
 const router = new express.Router();
 const Question = require("../dataAccess/question");
-const ExpressError = require("../helpers/expressError");
+const { requireProperSchema } = require("../middleware/validate");
 
 /** GET /
  *
@@ -37,19 +36,18 @@ router.get("/", async (req, res, next) => {
  * Returns: {question: {question_id, quiz_id, text, order_priority}}
  *
  */
-router.post("/", async (req, res, next) => {
-  const schemaCheck = jsonschema.validate(req.body, newQuestionSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
+router.post(
+  "/",
+  requireProperSchema(newQuestionSchema),
+  async (req, res, next) => {
+    try {
+      const question = await Question.create(req.body);
+      return res.status(201).json({ question });
+    } catch (err) {
+      return next(err);
+    }
   }
-  try {
-    const question = await Question.create(req.body);
-    return res.status(201).json({ question });
-  } catch (err) {
-    return next(err);
-  }
-});
+);
 
 /** GET /[id]
  *
@@ -86,19 +84,18 @@ router.get("/:id", async (req, res, next) => {
  *
  * If question cannot be found, raises 404 error.
  */
-router.patch("/:id", async (req, res, next) => {
-  const schemaCheck = jsonschema.validate(req.body, updateQuestionSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
+router.patch(
+  "/:id",
+  requireProperSchema(updateQuestionSchema),
+  async (req, res, next) => {
+    try {
+      const question = await Question.update(req.params.id, req.body);
+      return res.json({ question });
+    } catch (err) {
+      return next(err);
+    }
   }
-  try {
-    const question = await Question.update(req.params.id, req.body);
-    return res.json({ question });
-  } catch (err) {
-    return next(err);
-  }
-});
+);
 
 /** DELETE /[id]
  *

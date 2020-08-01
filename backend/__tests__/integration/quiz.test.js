@@ -3,37 +3,23 @@ process.env.DATABASE_URL = "quizzly-test";
 const app = require("../../app");
 const request = require("supertest");
 const db = require("../../db");
+const Quiz = require("../../dataAccess/quiz");
+const Question = require("../../dataAccess/question");
 
 let testQuiz;
 
 beforeEach(async function () {
-  let result = await db.query(
-    `INSERT INTO quizzes
-            (name, difficulty)
-            VALUES
-            ($1, $2)
-            RETURNING id, name, difficulty`,
-    ["Quiz1", 3]
-  );
-  testQuiz = result.rows[0];
+  testQuiz = await Quiz.create({ name: "Quiz1", difficulty: 3 });
 });
 
 afterEach(async function () {
-  await db.query("DELETE FROM quizzes WHERE id = $1", [testQuiz.id]);
+  await Quiz.delete(testQuiz.id);
 });
 
 describe("GET /quiz", function () {
   let testQuiz2;
   beforeAll(async function () {
-    const result = await db.query(
-      `INSERT INTO quizzes
-        (name, difficulty)
-        VALUES
-        ($1, $2)
-        RETURNING id, name, difficulty`,
-      ["Quiz2", 5]
-    );
-    testQuiz2 = result.rows[0];
+    testQuiz2 = await Quiz.create({ name: "Quiz2", difficulty: 5 });
   });
 
   it("should return list of all quizzes when given no parameters", async function () {
@@ -85,22 +71,18 @@ describe("GET /quiz", function () {
     expect(response.statusCode).toEqual(400);
   });
   afterAll(async function () {
-    await db.query(`DELETE FROM quizzes WHERE id = $1`, [testQuiz2.id]);
+    await Quiz.delete(testQuiz2.id);
   });
 });
 
 describe("GET /quiz/:id", function () {
   let testQuestion;
   beforeEach(async function () {
-    result = await db.query(
-      `INSERT INTO questions
-                    (quiz_id, text, order_priority)
-                    VALUES
-                    ($1, $2, $3)
-                    RETURNING question_id, quiz_id, text, order_priority`,
-      [testQuiz.id, "test question", 1]
-    );
-    testQuestion = result.rows[0];
+    testQuestion = await Question.create({
+      quiz_id: testQuiz.id,
+      text: "test question",
+      order_priority: 1,
+    });
   });
   it("should return detailed information on a single quiz", async function () {
     const response = await request(app).get(`/quiz/${testQuiz.id}`);
@@ -118,14 +100,11 @@ describe("GET /quiz/:id", function () {
     expect(response.statusCode).toEqual(404);
   });
   afterEach(async function () {
-    await db.query("DELETE FROM questions WHERE question_id = $1", [
-      testQuestion.question_id,
-    ]);
+    await Question.delete(testQuestion.question_id);
   });
 });
 
 describe("POST /quiz", function () {
-  let newQuizId;
   it("should create a new quiz", async function () {
     const newQuiz = {
       name: "new quiz",
@@ -136,7 +115,7 @@ describe("POST /quiz", function () {
       .send({ ...newQuiz });
     expect(response.statusCode).toEqual(201);
     expect(response.body.quiz).toEqual({ ...newQuiz, id: expect.any(String) });
-    newQuizId = response.body.quiz.id;
+    const newQuizId = response.body.quiz.id;
     response = await request(app).get(`/quiz/${newQuizId}`);
     expect(response.statusCode).toEqual(200);
     expect(response.body.quiz).toEqual({
@@ -144,6 +123,7 @@ describe("POST /quiz", function () {
       id: newQuizId,
       questions: [],
     });
+    await Quiz.delete(newQuizId);
   });
   it("should return a 400 if fields are missing", async function () {
     const newQuiz = {
@@ -151,9 +131,6 @@ describe("POST /quiz", function () {
     };
     let response = await request(app).post(`/quiz`).send({ newQuiz });
     expect(response.statusCode).toEqual(400);
-  });
-  afterEach(async function () {
-    await db.query("DELETE FROM quizzes WHERE id = $1", [newQuizId]);
   });
 });
 
@@ -191,7 +168,8 @@ describe("PATCH /quiz/:id", function () {
 
 describe("DELETE /quiz/:id", function () {
   it("should delete an existing quiz", async function () {
-    let response = await request(app).delete(`/quiz/${testQuiz.id}`);
+    const quiz = await Quiz.create({ name: "delete me", difficulty: 11 });
+    let response = await request(app).delete(`/quiz/${quiz.id}`);
     expect(response.statusCode).toEqual(200);
   });
   it("should return a 404 if id is invalid", async function () {

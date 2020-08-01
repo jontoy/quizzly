@@ -3,61 +3,42 @@ process.env.DATABASE_URL = "quizzly-test";
 const app = require("../../app");
 const request = require("supertest");
 const db = require("../../db");
+const Quiz = require("../../dataAccess/quiz");
+const Question = require("../../dataAccess/question");
+const Option = require("../../dataAccess/option");
 
 let testQuiz;
 let testQuestion;
 let testOption;
 
 beforeAll(async function () {
-  let result = await db.query(
-    `INSERT INTO quizzes
-                (name, difficulty)
-                VALUES
-                ($1, $2)
-                RETURNING id, name, difficulty`,
-    ["Quiz1", 3]
-  );
-  testQuiz = result.rows[0];
-  result = await db.query(
-    `INSERT INTO questions
-                  (quiz_id, text, order_priority)
-                  VALUES
-                  ($1, $2, $3)
-                  RETURNING question_id, quiz_id, text, order_priority`,
-    [testQuiz.id, "test question1", 1]
-  );
-  testQuestion = result.rows[0];
+  testQuiz = await Quiz.create({ name: "Quiz1", difficulty: 3 });
+  testQuestion = await Question.create({
+    quiz_id: testQuiz.id,
+    text: "test question1",
+    order_priority: 1,
+  });
 });
 beforeEach(async function () {
-  const result = await db.query(
-    `INSERT INTO options
-                  (question_id, value, is_correct)
-                  VALUES
-                  ($1, $2, $3)
-                  RETURNING option_id, question_id, value, is_correct`,
-    [testQuestion.question_id, "option1", true]
-  );
-  testOption = result.rows[0];
+  testOption = await Option.create({
+    question_id: testQuestion.question_id,
+    value: "option1",
+    is_correct: true,
+  });
 });
 
 afterEach(async function () {
-  await db.query("DELETE FROM options WHERE option_id = $1", [
-    testOption.option_id,
-  ]);
+  await Option.delete(testOption.option_id);
 });
 
 describe("GET /option", function () {
   let testOption2;
   beforeAll(async function () {
-    const result = await db.query(
-      `INSERT INTO options
-                      (question_id, value, is_correct)
-                      VALUES
-                      ($1, $2, $3)
-                      RETURNING option_id, question_id, value, is_correct`,
-      [testQuestion.question_id, "test option2", false]
-    );
-    testOption2 = result.rows[0];
+    testOption2 = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "option2",
+      is_correct: false,
+    });
   });
 
   it("should return list of all options when given no parameters", async function () {
@@ -119,7 +100,6 @@ describe("GET /option/:option_id", function () {
 });
 
 describe("POST /option", function () {
-  let newOptionId;
   it("should create a new option", async function () {
     const newOption = {
       question_id: testQuestion.question_id,
@@ -132,7 +112,7 @@ describe("POST /option", function () {
       ...newOption,
       option_id: expect.any(String),
     });
-    newOptionId = response.body.option.option_id;
+    const newOptionId = response.body.option.option_id;
     response = await request(app).get(`/option/${newOptionId}`);
     expect(response.statusCode).toEqual(200);
     expect(response.body.option).toEqual({
@@ -140,6 +120,7 @@ describe("POST /option", function () {
       option_id: newOptionId,
       question: testQuestion,
     });
+    await Option.delete(newOptionId);
   });
   it("should return a 400 if fields are missing", async function () {
     const newOption = {
@@ -147,9 +128,6 @@ describe("POST /option", function () {
     };
     let response = await request(app).post(`/option`).send({ newOption });
     expect(response.statusCode).toEqual(400);
-  });
-  afterEach(async function () {
-    await db.query("DELETE FROM options WHERE option_id = $1", [newOptionId]);
   });
 });
 
@@ -187,7 +165,12 @@ describe("PATCH /option/:id", function () {
 
 describe("DELETE /option/:id", function () {
   it("should delete an existing option", async function () {
-    let response = await request(app).delete(`/option/${testOption.option_id}`);
+    const option = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "delete me",
+      is_correct: false,
+    });
+    let response = await request(app).delete(`/option/${option.option_id}`);
     expect(response.statusCode).toEqual(200);
   });
   it("should return a 404 if id is invalid", async function () {
@@ -199,9 +182,7 @@ describe("DELETE /option/:id", function () {
 });
 
 afterAll(async function () {
-  await db.query("DELETE FROM questions WHERE question_id = $1", [
-    testQuestion.question_id,
-  ]);
-  await db.query("DELETE FROM quizzes WHERE id = $1", [testQuiz.id]);
+  await Question.delete(testQuestion.question_id);
+  await Quiz.delete(testQuiz.id);
   db.end();
 });

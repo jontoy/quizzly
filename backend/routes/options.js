@@ -1,10 +1,9 @@
 const express = require("express");
-const jsonschema = require("jsonschema");
 const newOptionSchema = require("../schemas/newOptionSchema.json");
 const updateOptionSchema = require("../schemas/updateOptionSchema.json");
 const router = new express.Router();
 const Option = require("../dataAccess/option");
-const ExpressError = require("../helpers/expressError");
+const { requireProperSchema } = require("../middleware/validate");
 
 /** GET /
  *
@@ -38,19 +37,18 @@ router.get("/", async (req, res, next) => {
  * Returns: {option: {option_id, question_id, value, is_correct}}
  *
  */
-router.post("/", async (req, res, next) => {
-  const schemaCheck = jsonschema.validate(req.body, newOptionSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
+router.post(
+  "/",
+  requireProperSchema(newOptionSchema),
+  async (req, res, next) => {
+    try {
+      const option = await Option.create(req.body);
+      return res.status(201).json({ option });
+    } catch (err) {
+      return next(err);
+    }
   }
-  try {
-    const option = await Option.create(req.body);
-    return res.status(201).json({ option });
-  } catch (err) {
-    return next(err);
-  }
-});
+);
 
 /** GET /[id]
  *
@@ -86,19 +84,18 @@ router.get("/:id", async (req, res, next) => {
  *
  * If option cannot be found, raises 404 error.
  */
-router.patch("/:id", async (req, res, next) => {
-  const schemaCheck = jsonschema.validate(req.body, updateOptionSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
+router.patch(
+  "/:id",
+  requireProperSchema(updateOptionSchema),
+  async (req, res, next) => {
+    try {
+      const option = await Option.update(req.params.id, req.body);
+      return res.json({ option });
+    } catch (err) {
+      return next(err);
+    }
   }
-  try {
-    const option = await Option.update(req.params.id, req.body);
-    return res.json({ option });
-  } catch (err) {
-    return next(err);
-  }
-});
+);
 
 /** DELETE /[id]
  *

@@ -3,51 +3,36 @@ process.env.DATABASE_URL = "quizzly-test";
 const app = require("../../app");
 const request = require("supertest");
 const db = require("../../db");
+const Quiz = require("../../dataAccess/quiz");
+const Question = require("../../dataAccess/question");
+const Option = require("../../dataAccess/option");
 
 let testQuiz;
 let testQuestion;
 
 beforeAll(async function () {
-  const result = await db.query(
-    `INSERT INTO quizzes
-                (name, difficulty)
-                VALUES
-                ($1, $2)
-                RETURNING id, name, difficulty`,
-    ["Quiz1", 3]
-  );
-  testQuiz = result.rows[0];
+  testQuiz = await Quiz.create({ name: "Quiz1", difficulty: 3 });
 });
 beforeEach(async function () {
-  const result = await db.query(
-    `INSERT INTO questions
-                  (quiz_id, text, order_priority)
-                  VALUES
-                  ($1, $2, $3)
-                  RETURNING question_id, quiz_id, text, order_priority`,
-    [testQuiz.id, "test question1", 1]
-  );
-  testQuestion = result.rows[0];
+  testQuestion = await Question.create({
+    quiz_id: testQuiz.id,
+    text: "test question1",
+    order_priority: 1,
+  });
 });
 
 afterEach(async function () {
-  await db.query("DELETE FROM questions WHERE question_id = $1", [
-    testQuestion.question_id,
-  ]);
+  await Question.delete(testQuestion.question_id);
 });
 
 describe("GET /question", function () {
   let testQuestion2;
   beforeAll(async function () {
-    const result = await db.query(
-      `INSERT INTO questions
-                      (quiz_id, text, order_priority)
-                      VALUES
-                      ($1, $2, $3)
-                      RETURNING question_id, quiz_id, text, order_priority`,
-      [testQuiz.id, "test question2", 2]
-    );
-    testQuestion2 = result.rows[0];
+    testQuestion2 = await Question.create({
+      quiz_id: testQuiz.id,
+      text: "test question2",
+      order_priority: 2,
+    });
   });
 
   it("should return list of all questions when given no parameters", async function () {
@@ -75,24 +60,18 @@ describe("GET /question", function () {
     expect(response.body.questions).toEqual([testQuestion, testQuestion2]);
   });
   afterAll(async function () {
-    await db.query(`DELETE FROM questions WHERE question_id = $1`, [
-      testQuestion2.question_id,
-    ]);
+    await Question.delete(testQuestion2.question_id);
   });
 });
 
 describe("GET /question/:question_id", function () {
   let testOption;
   beforeEach(async function () {
-    result = await db.query(
-      `INSERT INTO options
-                    (question_id, value, is_correct)
-                    VALUES
-                    ($1, $2, $3)
-                    RETURNING option_id, question_id, value, is_correct`,
-      [testQuestion.question_id, "option1", true]
-    );
-    testOption = result.rows[0];
+    testOption = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "option1",
+      is_correct: true,
+    });
   });
   it("should return detailed information on a single question", async function () {
     const response = await request(app).get(
@@ -113,14 +92,11 @@ describe("GET /question/:question_id", function () {
     expect(response.statusCode).toEqual(404);
   });
   afterEach(async function () {
-    await db.query("DELETE FROM options WHERE option_id = $1", [
-      testOption.option_id,
-    ]);
+    await Option.delete(testOption.option_id);
   });
 });
 
 describe("POST /question", function () {
-  let newQuestionId;
   it("should create a new question", async function () {
     const newQuestion = {
       quiz_id: testQuiz.id,
@@ -133,7 +109,7 @@ describe("POST /question", function () {
       ...newQuestion,
       question_id: expect.any(String),
     });
-    newQuestionId = response.body.question.question_id;
+    const newQuestionId = response.body.question.question_id;
     response = await request(app).get(`/question/${newQuestionId}`);
     expect(response.statusCode).toEqual(200);
     expect(response.body.question).toEqual({
@@ -142,6 +118,7 @@ describe("POST /question", function () {
       quiz: testQuiz,
       options: [],
     });
+    await Question.delete(newQuestionId);
   });
   it("should return a 400 if fields are missing", async function () {
     const newQuestion = {
@@ -149,11 +126,6 @@ describe("POST /question", function () {
     };
     let response = await request(app).post(`/question`).send({ newQuestion });
     expect(response.statusCode).toEqual(400);
-  });
-  afterEach(async function () {
-    await db.query("DELETE FROM questions WHERE question_id = $1", [
-      newQuestionId,
-    ]);
   });
 });
 
@@ -192,8 +164,13 @@ describe("PATCH /question/:id", function () {
 
 describe("DELETE /question/:id", function () {
   it("should delete an existing question", async function () {
+    const question = await Question.create({
+      quiz_id: testQuiz.id,
+      text: "delete me",
+      order_priority: 4,
+    });
     let response = await request(app).delete(
-      `/question/${testQuestion.question_id}`
+      `/question/${question.question_id}`
     );
     expect(response.statusCode).toEqual(200);
   });
@@ -206,6 +183,6 @@ describe("DELETE /question/:id", function () {
 });
 
 afterAll(async function () {
-  await db.query("DELETE FROM quizzes WHERE id = $1", [testQuiz.id]);
+  await Quiz.delete(testQuiz.id);
   db.end();
 });

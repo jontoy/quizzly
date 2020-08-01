@@ -1,10 +1,9 @@
 const express = require("express");
-const jsonschema = require("jsonschema");
 const newQuizSchema = require("../schemas/newQuizSchema.json");
 const updateQuizSchema = require("../schemas/updateQuizSchema.json");
 const router = new express.Router();
-const ExpressError = require("../helpers/expressError");
 const Quiz = require("../dataAccess/quiz");
+const { requireProperSchema } = require("../middleware/validate");
 
 /** GET /
  *
@@ -38,12 +37,7 @@ router.get("/", async (req, res, next) => {
  * Returns: {quiz: {id, name, difficulty}}
  *
  */
-router.post("/", async (req, res, next) => {
-  const schemaCheck = jsonschema.validate(req.body, newQuizSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
-  }
+router.post("/", requireProperSchema(newQuizSchema), async (req, res, next) => {
   try {
     const quiz = await Quiz.create(req.body);
     return res.status(201).json({ quiz });
@@ -85,20 +79,18 @@ router.get("/:id", async (req, res, next) => {
  *
  * If quiz cannot be found, raises 404 error.
  */
-router.patch("/:id", async (req, res, next) => {
-  console.log(req.body);
-  const schemaCheck = jsonschema.validate(req.body, updateQuizSchema);
-  if (!schemaCheck.valid) {
-    listOfErrors = schemaCheck.errors.map((error) => error.stack);
-    return next(new ExpressError(listOfErrors, 400));
+router.patch(
+  "/:id",
+  requireProperSchema(updateQuizSchema),
+  async (req, res, next) => {
+    try {
+      const quiz = await Quiz.update(req.params.id, req.body);
+      return res.json({ quiz });
+    } catch (err) {
+      return next(err);
+    }
   }
-  try {
-    const quiz = await Quiz.update(req.params.id, req.body);
-    return res.json({ quiz });
-  } catch (err) {
-    return next(err);
-  }
-});
+);
 
 /** DELETE /[id]
  *
