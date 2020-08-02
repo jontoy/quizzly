@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <ul
+    class="QuizList list-unstyled"
+  />
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when passed quizzes 1`] = `
+<DocumentFragment>
+  <ul
+    class="QuizList list-unstyled"
+  >
+    <li>
+      <a
+        href="/quizzes/abcdefg"
+      >
+        <div
+          class="QuizCard card p-2 mb-1 bg-light"
+        >
+          <h5
+            class="card-title"
+          >
+            test quiz
+          </h5>
+          <p
+            class="card-text"
+          >
+            Difficulty: 5
+          </p>
+        </div>
+      </a>
+    </li>
+  </ul>
+</DocumentFragment>
+`;

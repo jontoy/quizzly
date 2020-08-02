@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import QuizzlyApi from "./QuizzlyApi";
+import QuizzlyApi from "../QuizzlyApi";
 import Searchbox from "./Searchbox";
 import QuizList from "./QuizList";
 
@@ -19,6 +19,7 @@ const Quizzes = () => {
     return <p>Loading &hellip;</p>;
   }
 
+  console.log(quizzes);
   return (
     <div className="Quizzes container">
       <Searchbox filterResults={setSearchTerm} />

@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="ResultsBanner jumbotron bg-warning text-dark"
+  >
+    <h1
+      class="display-4"
+    >
+      Too bad...
+    </h1>
+    <p
+      class="lead"
+    >
+      You got 0 out of 0 correct on this attempt.
+    </p>
+    <hr
+      class="my-4"
+    />
+    <p>
+      Review the material and give it another shot!
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when user scores badly 1`] = `
+<DocumentFragment>
+  <div
+    class="ResultsBanner jumbotron bg-warning text-dark"
+  >
+    <h1
+      class="display-4"
+    >
+      Too bad...
+    </h1>
+    <p
+      class="lead"
+    >
+      You got 1 out of 5 correct on this attempt.
+    </p>
+    <hr
+      class="my-4"
+    />
+    <p>
+      Review the material and give it another shot!
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when user scores moderately 1`] = `
+<DocumentFragment>
+  <div
+    class="ResultsBanner jumbotron bg-info text-light"
+  >
+    <h1
+      class="display-4"
+    >
+      So close!
+    </h1>
+    <p
+      class="lead"
+    >
+      You got 3 out of 5 correct on this attempt.
+    </p>
+    <hr
+      class="my-4"
+    />
+    <p>
+      You almost had it!
+    </p>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when user scores well 1`] = `
+<DocumentFragment>
+  <div
+    class="ResultsBanner jumbotron bg-success text-light"
+  >
+    <h1
+      class="display-4"
+    >
+      Congratulations!
+    </h1>
+    <p
+      class="lead"
+    >
+      You got 19 out of 20 correct on this attempt.
+    </p>
+    <hr
+      class="my-4"
+    />
+    <p>
+      You really know your stuff!
+    </p>
+  </div>
+</DocumentFragment>
+`;

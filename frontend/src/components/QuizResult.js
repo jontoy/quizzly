@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getQuizFromAPI } from "./actions/quizzes";
-import { resetResponses } from "./actions/responses";
+import { getQuizFromAPI } from "../actions/quizzes";
+import { resetResponses } from "../actions/responses";
 import ResultsBanner from "./ResultsBanner";
 import ResultsList from "./ResultsList";
 import { Link } from "react-router-dom";
-import QuizzlyApi from "./QuizzlyApi";
+import QuizzlyApi from "../QuizzlyApi";
 
 const QuizResult = () => {
   const dispatch = useDispatch();
@@ -65,7 +65,7 @@ const QuizResult = () => {
     history.push(`/quizzes/${quiz.id}`);
   };
   return (
-    <div className="QuizResult container-fluid">
+    <div className="QuizResult container-fluid mt-3">
       <ResultsBanner
         numberCorrect={numberCorrect}
         totalQuestions={totalQuestions}
@@ -80,11 +80,17 @@ const QuizResult = () => {
         correct={false}
       />
       <div className="container-fluid bg-light py-2">
-        <button className="btn btn-danger" role="button" onClick={reset}>
+        <button
+          className="btn btn-outline-danger"
+          role="button"
+          onClick={reset}
+        >
           Retry Quiz?
         </button>
         <Link to="/quizzes">
-          <button className="btn btn-info">Find more Quizzes</button>
+          <button className="btn btn-outline-info ml-1">
+            Find more Quizzes
+          </button>
         </Link>
       </div>
     </div>

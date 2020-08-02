@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const ResultsList = ({ items, correct }) => {
+const ResultsList = ({ items = [], correct = true }) => {
   const icon = correct ? (
     <FontAwesomeIcon className="text-success" icon={faCheck} />
   ) : (
@@ -18,9 +18,9 @@ const ResultsList = ({ items, correct }) => {
         >
           {icon} {message}
         </li>
-        {items.map((item) => (
-          <li key={item.id} className="list-group-item text-black-50">
-            {item.text}
+        {items.map(({ id, text }) => (
+          <li key={id} className="list-group-item text-black-50">
+            {text}
           </li>
         ))}
       </ul>
@@ -28,4 +28,4 @@ const ResultsList = ({ items, correct }) => {
   );
 };
 
-export default ResultsList;
+export default React.memo(ResultsList);

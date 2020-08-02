@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import DetailedQuizCard from "./DetailedQuizCard";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getQuizFromAPI } from "./actions/quizzes";
-import { resetResponses } from "./actions/responses";
+import { getQuizFromAPI } from "../actions/quizzes";
+import { resetResponses } from "../actions/responses";
 
 const Quiz = () => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const Quiz = () => {
     }
   }
   return (
-    <div className="Quiz">
+    <div className="Quiz container mt-3">
       <DetailedQuizCard
         id={id}
         name={name}

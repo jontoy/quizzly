@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Searchbox.css";
-import useDebounce from "./hooks/useDebounce";
+import useDebounce from "../hooks/useDebounce";
 
 const Searchbox = ({ filterResults }) => {
   const [term, setTerm] = useState("");

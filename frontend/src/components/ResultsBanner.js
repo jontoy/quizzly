@@ -1,7 +1,7 @@
 import React from "react";
 
-const ResultsBanner = ({ numberCorrect, totalQuestions }) => {
-  const score = numberCorrect / totalQuestions;
+const ResultsBanner = ({ numberCorrect = 0, totalQuestions = 0 }) => {
+  const score = numberCorrect === 0 ? 0 : numberCorrect / totalQuestions;
   let color;
   let topMessage;
   let bottomMessage;
@@ -33,4 +33,4 @@ const ResultsBanner = ({ numberCorrect, totalQuestions }) => {
     </div>
   );
 };
-export default ResultsBanner;
+export default React.memo(ResultsBanner);

@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="QuizCard card p-2 mb-1 bg-light border-dark"
+  >
+    <h4
+      class="card-title"
+    />
+    <p
+      class="card-text"
+    >
+      Difficulty: 
+    </p>
+    <p
+      class="card-text"
+    >
+      Answered: 0 of 0
+    </p>
+    <div
+      class="mb-3"
+    >
+      <a
+        class="btn btn-outline-info"
+        href="/quizzes"
+      >
+        Back to Quizzes
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when there are non-zero questions 1`] = `
+<DocumentFragment>
+  <div
+    class="QuizCard card p-2 mb-1 bg-light border-dark"
+  >
+    <h4
+      class="card-title"
+    />
+    <p
+      class="card-text"
+    >
+      Difficulty: 
+    </p>
+    <p
+      class="card-text"
+    >
+      Answered: 0 of 5
+    </p>
+    <div
+      class="mb-3"
+    >
+      <a
+        class="btn btn-outline-info"
+        href="/quizzes"
+      >
+        Back to Quizzes
+      </a>
+    </div>
+    <div>
+      <button
+        class="btn btn-success"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`matches snapshot when there are non-zero questions and answers 1`] = `
+<DocumentFragment>
+  <div
+    class="QuizCard card p-2 mb-1 bg-light border-dark"
+  >
+    <h4
+      class="card-title"
+    />
+    <p
+      class="card-text"
+    >
+      Difficulty: 
+    </p>
+    <p
+      class="card-text"
+    >
+      Answered: 3 of 5
+    </p>
+    <div
+      class="mb-3"
+    >
+      <a
+        class="btn btn-outline-info"
+        href="/quizzes"
+      >
+        Back to Quizzes
+      </a>
+    </div>
+    <div>
+      <button
+        class="btn btn-success"
+      />
+      <button
+        class="btn btn-danger ml-1"
+      >
+        Reset Progress?
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

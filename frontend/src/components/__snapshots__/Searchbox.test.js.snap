@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <form
+    class="Searchbox form-inline mt-3"
+  >
+    <input
+      class="form-control form-control-lg flex-grow-1"
+      name="search"
+      placeholder="Search..."
+      type="search"
+      value=""
+    />
+  </form>
+</DocumentFragment>
+`;

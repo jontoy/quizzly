@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getQuizFromAPI } from "./actions/quizzes";
-import { getQuestionFromAPI } from "./actions/questions";
-import { addResponse } from "./actions/responses";
+import { getQuizFromAPI } from "../actions/quizzes";
+import { getQuestionFromAPI } from "../actions/questions";
+import { addResponse } from "../actions/responses";
 import "./Question.css";
 
 const Question = () => {
@@ -42,6 +42,20 @@ const Question = () => {
         : `/quizzes/${quiz.id}/results`;
     history.push(destinationRoute);
   };
+  const goToPreviousQuestion = () => {
+    const destinationRoute =
+      Number(questionNumber) > 0
+        ? `/quizzes/${quiz.id}/questions/${Number(questionNumber) - 1}`
+        : `/quizzes/${quiz.id}`;
+    history.push(destinationRoute);
+  };
+  const goToNextQuestion = () => {
+    const destinationRoute =
+      Number(questionNumber) < quiz.questions.length - 1
+        ? `/quizzes/${quiz.id}/questions/${Number(questionNumber) + 1}`
+        : `/quizzes/${quiz.id}/results`;
+    history.push(destinationRoute);
+  };
 
   const BASE_STATE = { choice: null };
   const [formData, setFormData] = useState(BASE_STATE);
@@ -69,12 +83,12 @@ const Question = () => {
     return <p>Loading &hellip;</p>;
   }
   return (
-    <div className="Question container">
+    <div className="Question container mt-3">
       <span className="Question-counter">
         Question {Number(questionNumber) + 1} of {quiz.questions.length}
       </span>
       <h4>{question.text}</h4>
-      <form onSubmit={handleSubmit}>
+      <form className="mb-3" onSubmit={handleSubmit}>
         <ul className="list-unstyled">
           {question.options.map((opt) => (
             <li className="Question-option my-1">
@@ -104,8 +118,19 @@ const Question = () => {
           ))}
         </ul>
 
-        <button>Submit</button>
+        <button className="btn btn-success">Submit Answer</button>
       </form>
+      <div>
+        <button
+          className="btn btn-outline-secondary"
+          onClick={goToPreviousQuestion}
+        >
+          Previous
+        </button>
+        <button className="btn btn-secondary ml-1" onClick={goToNextQuestion}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };

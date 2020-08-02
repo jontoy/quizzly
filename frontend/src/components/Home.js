@@ -7,7 +7,9 @@ const Home = () => {
     <div className="Home jumbotron">
       <h1 className="display-4">Quizzly</h1>
       <p className="lead">All your favorite quizzes, collected in one place!</p>
-      <Link to="/quizzes">Find a Quiz!</Link>
+      <Link className="btn btn-info" to="/quizzes">
+        Find a Quiz!
+      </Link>
     </div>
   );
 };

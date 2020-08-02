@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="QuizCard card p-2 mb-1 bg-light"
+  >
+    <h5
+      class="card-title"
+    />
+    <p
+      class="card-text"
+    >
+      Difficulty: 
+    </p>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,9 @@
+.Navigation-link {
+  color: white;
+  margin: 0 10px;
+}
+
+.Navigation-link.active {
+  font-weight: bold;
+  color: black;
+}
