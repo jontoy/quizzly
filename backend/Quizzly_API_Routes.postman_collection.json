@@ -1,0 +1,458 @@
+{
+	"info": {
+		"_postman_id": "a147003d-eb55-42da-97be-71d27b0c74d9",
+		"name": "Quizzly_API_Routes",
+		"description": "A collection of sample requests for all of the routes for the Quizzly backend API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Quiz Routes",
+			"item": [
+				{
+					"name": "GET quiz",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/quiz",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET quiz w/ search parameters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/quiz?min_difficulty=3",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz"
+							],
+							"query": [
+								{
+									"key": "min_difficulty",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST quiz",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"My First Quiz\", \"difficulty\": 2}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/quiz",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH quiz/[id]",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"difficulty\": 9}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/quiz/518a7161-2754-4c2f-8583-4e197d382861",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz",
+								"518a7161-2754-4c2f-8583-4e197d382861"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET quiz/[id]",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/quiz/518a7161-2754-4c2f-8583-4e197d382861",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz",
+								"518a7161-2754-4c2f-8583-4e197d382861"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET quiz/[id]/answers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/quiz/e4e9ac7a-3700-42b6-8205-dfd21f019a50/answers",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz",
+								"e4e9ac7a-3700-42b6-8205-dfd21f019a50",
+								"answers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE quiz/[id]",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/quiz/518a7161-2754-4c2f-8583-4e197d382861",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"quiz",
+								"518a7161-2754-4c2f-8583-4e197d382861"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Question Routes",
+			"item": [
+				{
+					"name": "GET question",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/question",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET question w/ search parameters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/question?quiz_id=e4e9ac7a-3700-42b6-8205-dfd21f019a50",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question"
+							],
+							"query": [
+								{
+									"key": "quiz_id",
+									"value": "e4e9ac7a-3700-42b6-8205-dfd21f019a50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST question",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"quiz_id\":\"e4e9ac7a-3700-42b6-8205-dfd21f019a50\", \"text\":\"My First Question\", \"order_priority\":1}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/question",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH question/[question_id]",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"order_priority\":2.5}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/question/150fe6ea-63bb-4a28-9fe5-ca47246ef4f4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question",
+								"150fe6ea-63bb-4a28-9fe5-ca47246ef4f4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET question/[question_id]",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/question/150fe6ea-63bb-4a28-9fe5-ca47246ef4f4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question",
+								"150fe6ea-63bb-4a28-9fe5-ca47246ef4f4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE question/[question_id]",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/question/150fe6ea-63bb-4a28-9fe5-ca47246ef4f4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"question",
+								"150fe6ea-63bb-4a28-9fe5-ca47246ef4f4"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Option Routes",
+			"item": [
+				{
+					"name": "GET option",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/option",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET option w/ search parameters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/option?question_id=49702c82-95a1-481f-915b-9aa5a3949f1b&is_correct=true",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option"
+							],
+							"query": [
+								{
+									"key": "question_id",
+									"value": "49702c82-95a1-481f-915b-9aa5a3949f1b"
+								},
+								{
+									"key": "is_correct",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST option",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"question_id\":\"49702c82-95a1-481f-915b-9aa5a3949f1b\", \"value\":\"My First Option\", \"is_correct\": true}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/option",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PATCH option/[option_id]",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"is_correct\": false}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3001/option/bbc28d40-1025-434d-8666-a589ae4a84c4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option",
+								"bbc28d40-1025-434d-8666-a589ae4a84c4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET option/[option_id]",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/option/bbc28d40-1025-434d-8666-a589ae4a84c4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option",
+								"bbc28d40-1025-434d-8666-a589ae4a84c4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE option/[option_id]",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3001/option/bbc28d40-1025-434d-8666-a589ae4a84c4",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"option",
+								"bbc28d40-1025-434d-8666-a589ae4a84c4"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -69,6 +69,19 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+/** GET /[id]/answers
+ *
+ * Gets valid correct options for each question on a quiz
+ * and returns them in an array.
+ *
+ * Returns:
+ *  {answers: { id,
+ *          answers:[{question_id,
+ *                    text,
+ *                    valid_options:[opt1, opt2, ...]}, ...]
+ *          }}
+ *
+ */
 router.get("/:id/answers", async (req, res, next) => {
   try {
     const { id } = req.params;

@@ -38,7 +38,6 @@ describe("GET /question", function () {
   it("should return list of all questions when given no parameters", async function () {
     const response = await request(app).get("/question");
     expect(response.statusCode).toEqual(200);
-    console.log(response.body.questions);
     expect(response.body.questions).toEqual(
       expect.arrayContaining([testQuestion, testQuestion2])
     );

@@ -109,6 +109,9 @@ class Quiz {
     return true;
   }
 
+  /** Returns answers to specified quiz:
+   * {id, answers:[{question_id1, text1, valid_options:[opt1, opt2, ...]},...]}
+   **/
   static async getAnswers(id) {
     const result = await db.query(
       `SELECT qz.id, qz.name, qz.difficulty, 

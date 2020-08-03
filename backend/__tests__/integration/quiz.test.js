@@ -5,6 +5,7 @@ const request = require("supertest");
 const db = require("../../db");
 const Quiz = require("../../dataAccess/quiz");
 const Question = require("../../dataAccess/question");
+const Option = require("../../dataAccess/option");
 
 let testQuiz;
 
@@ -177,6 +178,56 @@ describe("DELETE /quiz/:id", function () {
       `/quiz/00000000-0000-0000-0000-000000000000`
     );
     expect(response.statusCode).toEqual(404);
+  });
+});
+
+describe("GET /quiz/:id/answers", function () {
+  let testQuestion;
+  let rightOption;
+  let wrongOption1;
+  let wrongOption2;
+  beforeEach(async function () {
+    testQuestion = await Question.create({
+      quiz_id: testQuiz.id,
+      text: "test question",
+      order_priority: 1,
+    });
+    rightOption = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "right option",
+      is_correct: true,
+    });
+    wrongOption1 = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "wrong option1",
+      is_correct: false,
+    });
+    wrongOption2 = await Option.create({
+      question_id: testQuestion.question_id,
+      value: "wrong option2",
+      is_correct: false,
+    });
+  });
+  it("should return detailed information on answers to a single quiz", async function () {
+    const response = await request(app).get(`/quiz/${testQuiz.id}/answers`);
+    expect(response.statusCode).toEqual(200);
+    expect(response.body.answers).toEqual({
+      quiz_id: testQuiz.id,
+      answers: [
+        {
+          question_id: testQuestion.question_id,
+          text: testQuestion.text,
+          valid_options: [rightOption.option_id],
+        },
+      ],
+    });
+  });
+
+  afterEach(async function () {
+    await Option.delete(rightOption.option_id);
+    await Option.delete(wrongOption1.option_id);
+    await Option.delete(wrongOption2.option_id);
+    await Question.delete(testQuestion.question_id);
   });
 });
 

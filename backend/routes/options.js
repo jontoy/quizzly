@@ -16,7 +16,6 @@ const { requireProperSchema } = require("../middleware/validate");
 router.get("/", async (req, res, next) => {
   try {
     const { question_id, value, is_correct } = req.query;
-    console.log(req.query);
     const options = await Option.getAll({
       question_id,
       value,
