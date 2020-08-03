@@ -18,8 +18,6 @@ const Quizzes = () => {
   if (isLoading) {
     return <p>Loading &hellip;</p>;
   }
-
-  console.log(quizzes);
   return (
     <div className="Quizzes container">
       <Searchbox filterResults={setSearchTerm} />
