@@ -23,6 +23,10 @@ app.use("/quiz", quizRoutes);
 app.use("/question", questionRoutes);
 app.use("/option", optionRoutes);
 
+app.get("/", (req, res, next) => {
+  return res.json({ message: "Welcome to the Quizzly API" });
+});
+
 /** 404 handler */
 
 app.use(function (req, res, next) {

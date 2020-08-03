@@ -80,11 +80,7 @@ const QuizResult = () => {
         correct={false}
       />
       <div className="container-fluid bg-light py-2">
-        <button
-          className="btn btn-outline-danger"
-          role="button"
-          onClick={reset}
-        >
+        <button className="btn btn-outline-danger" onClick={reset}>
           Retry Quiz?
         </button>
         <Link to="/quizzes">

@@ -32,7 +32,14 @@ const Question = () => {
         }
       }
     },
-    [missingQuiz, missingQuestion, questionNumber, quizId, dispatch]
+    [
+      quiz.questions,
+      missingQuiz,
+      missingQuestion,
+      questionNumber,
+      quizId,
+      dispatch,
+    ]
   );
   const goToActiveQuestion = (quiz, responses) => {
     const quizResponses = responses[quiz.id];
