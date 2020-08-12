@@ -31,6 +31,8 @@ Information regarding the true/false value of options is purposely excluded from
 
 The redux store is persisted in localStorage using redux-persist. This allows for a semi-permanent user to be established, as the user will be able to maintain their various quiz progresses whenever they return to the site.
 
+Filtering quizzes for the index page is primarily a backend implementation. The search box UI controls the search term of the associated call to the API to filter results. This could have alternatively been implemented by requesting all results and filtering them on the frontend. This would have resulted in a slightly more responsive UI experience, but would not have scaled as well.
+
 ## Future Areas of Improvement
 
 - Paginate quiz index results on either the frontend or backend
