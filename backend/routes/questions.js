@@ -1,9 +1,13 @@
 const express = require("express");
 const newQuestionSchema = require("../schemas/newQuestionSchema.json");
 const updateQuestionSchema = require("../schemas/updateQuestionSchema.json");
+const questionResponseSchema = require("../schemas/questionResponseSchema.json");
 const router = new express.Router();
 const Question = require("../dataAccess/question");
-const { requireProperSchema } = require("../middleware/validate");
+const {
+  requireProperSchema,
+  validateSchema,
+} = require("../middleware/validate");
 
 /** GET /
  *
@@ -90,6 +94,7 @@ router.patch(
   async (req, res, next) => {
     try {
       const question = await Question.update(req.params.id, req.body);
+      validateSchema(question, questionResponseSchema);
       return res.json({ question });
     } catch (err) {
       return next(err);

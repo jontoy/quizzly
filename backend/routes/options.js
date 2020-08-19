@@ -1,9 +1,13 @@
 const express = require("express");
 const newOptionSchema = require("../schemas/newOptionSchema.json");
 const updateOptionSchema = require("../schemas/updateOptionSchema.json");
+const optionResponseSchema = require("../schemas/optionResponseSchema.json");
 const router = new express.Router();
 const Option = require("../dataAccess/option");
-const { requireProperSchema } = require("../middleware/validate");
+const {
+  requireProperSchema,
+  validateSchema,
+} = require("../middleware/validate");
 
 /** GET /
  *
@@ -89,6 +93,7 @@ router.patch(
   async (req, res, next) => {
     try {
       const option = await Option.update(req.params.id, req.body);
+      validateSchema(option, optionResponseSchema);
       return res.json({ option });
     } catch (err) {
       return next(err);

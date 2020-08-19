@@ -1,9 +1,13 @@
 const express = require("express");
 const newQuizSchema = require("../schemas/newQuizSchema.json");
 const updateQuizSchema = require("../schemas/updateQuizSchema.json");
+const quizResponseSchema = require("../schemas/quizResponseSchema.json");
 const router = new express.Router();
 const Quiz = require("../dataAccess/quiz");
-const { requireProperSchema } = require("../middleware/validate");
+const {
+  requireProperSchema,
+  validateSchema,
+} = require("../middleware/validate");
 
 /** GET /
  *
@@ -108,6 +112,7 @@ router.patch(
   async (req, res, next) => {
     try {
       const quiz = await Quiz.update(req.params.id, req.body);
+      validateSchema(quiz, quizResponseSchema);
       return res.json({ quiz });
     } catch (err) {
       return next(err);
